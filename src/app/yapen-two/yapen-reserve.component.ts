@@ -152,7 +152,58 @@ import { Component, OnInit } from '@angular/core';
 
   `,
   styles: [`
-
+    .reserve-page{
+      margin: 0;
+      padding: 0;
+      line-height: 1.3;
+      font-size: 12px;
+      font-family: dotum, 맑은 고딕, "Malgun Gothic", "맑은 고딕", Tahoma, Geneva, sans-serif;
+      word-break: break-all;
+      color: #444;
+    }
+    .reserve-info{
+      position: relative;
+      min-height: 308px;
+      margin: 24px 0 0;
+    }
+    .reserve-calendar{
+      position: absolute;
+      top: 0;
+      left: 0;
+    }
+    .reserve-basic-info{
+      padding: 15px 0 0 310px;
+    }
+    .reserve-basic-info .today-date{
+      float: right;
+      margin: 0 10px 13px 0;
+    }
+    .basic-info-table{
+      width: 100%;
+    }
+    .room-info{
+      margin-bottom: 47px;
+    }
+    .room-info-table{
+      width: 100%;
+    }
+    .total-price{
+      padding: 29px 15px 0 0;
+      text-align: right;
+      font-size: 16px;
+    }
+    .reserve-btn{
+      margin: 70px auto;
+      text-align: center;
+    }
+    .reserve-btn button{
+      padding: 10px 100px;
+      font-weight: bold;
+      font-size: 14px;
+      border-radius: 3px;
+      background: #ff6559;
+      color: #fff;
+    }
   `]
 })
 export class YapenReserveComponent implements OnInit {
