@@ -17,7 +17,7 @@ import { Component, OnInit } from '@angular/core';
         <!-- reserve basic info table -->
         <section class="reserve-basic-info">
           <p class="today-date">오늘 2018년 08월 10일(금)</p>
-          <table class="basic-info-table">
+          <table class="basic-info-table table-bordered">
             <tbody>
               <tr>
                 <th scope="row">펜션명</th>
@@ -56,7 +56,7 @@ import { Component, OnInit } from '@angular/core';
       <div class="room-info">
 
         <!-- room info table -->
-        <table class="room-info-table">
+        <table class="room-info-table table-bordered">
 
           <!-- table header -->
           <thead class="thead-light">
