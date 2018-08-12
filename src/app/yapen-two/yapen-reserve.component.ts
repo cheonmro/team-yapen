@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { NgbDateStruct, NgbCalendar } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-yapen-reserve',
@@ -11,12 +12,32 @@ import { Component, OnInit } from '@angular/core';
 
         <!-- reserve calendar -->
         <section class="reserve-calendar">
+
+          <ngb-datepicker #dp (select)="onDateSelection($event)"
+            class="date-picker"
+            [firstDayOfWeek]="firstDayOfWeek"
+            [markDisabled]="isDisabled"
+            [dayTemplate]="t">
+          </ngb-datepicker>
+
+          <ng-template #t let-date="date" let-currentMonth="currentMonth"
+            let-disabled="disabled">
+
+            <span class="custom-day"
+              [style.background-color]="(isDarked(date) ? '#CCC' : '')"
+              [class.hidden]="date.month !== currentMonth"
+              >
+              {{ date.day }}
+            </span>
+          </ng-template>
+
         </section>
         <!-- reserve calendar -->
 
         <!-- reserve basic info table -->
         <section class="reserve-basic-info">
-          <p class="today-date">오늘 2018년 08월 10일(금)</p>
+          <p class="today-date">오늘 <span>{{ today.getFullYear() }}년 {{ today.getMonth() + 1 }}월
+            {{ today.getDate() }}일</span> <span>({{ getWeekDay(today) }})</span></p>
           <table class="basic-info-table table-bordered">
             <tbody>
               <tr>
@@ -33,10 +54,8 @@ import { Component, OnInit } from '@angular/core';
               </tr>
               <tr>
                 <th scope="row">요금타입</th>
-                <td>
-                  <span>08월 10일</span>
-                  은 준성수기/금 요금이 적용됩니다.
-                </td>
+                <td><span>{{ selectedDate.month }}월 {{ selectedDate.day }}일 ({{ selectedDateWeekDay() }})</span>
+                      은 극성수기/{{ isWeekend(selectedDate) ? '주말' : '주중' }} 요금이 적용됩니다.</td>
               </tr>
             </tbody>
           </table>
@@ -48,7 +67,8 @@ import { Component, OnInit } from '@angular/core';
 
       <!-- date selected -->
       <div class="select-date">
-        <p>선택일: <span>2018-08-10 </span> <span>(금)</span></p>
+        <p>선택일: <span>{{ selectedDate.year }}-{{ selectedDate.month }}-{{ selectedDate.day }}</span>
+          <span>({{ selectedDateWeekDay() }})</span></p>
       </div>
       <!-- date selected -->
 
@@ -204,13 +224,73 @@ import { Component, OnInit } from '@angular/core';
       background: #ff6559;
       color: #fff;
     }
+    .custom-day{
+      margin: 0;
+      padding: 0;
+      border: 1px solid rgba(0, 0, 0, 0.125);
+    }
   `]
 })
 export class YapenReserveComponent implements OnInit {
+  selectedDate: NgbDateStruct;
 
-  constructor() { }
+  firstDayOfWeek = 7;
+
+  weekDay: string;
+
+  today: Date = new Date();
+
+  // set initial date as today date
+  constructor(calendar: NgbCalendar) {
+    this.selectedDate = calendar.getToday();
+    this.getWeekDay(this.today);
+   }
 
   ngOnInit() {
   }
+
+    // get weekday(요일) as string
+    getWeekDay(date: Date) {
+      const weekDayDate = date;
+      const weekDayNumber = weekDayDate.getDay();
+      return weekDayNumber === 0 ? '일' : weekDayNumber === 1 ? '월' :
+              weekDayNumber === 2 ? '화' :  weekDayNumber === 3 ? '수' :
+              weekDayNumber === 4 ? '목' :  weekDayNumber === 5 ? '금' : '토';
+    }
+
+    // get weekday for selected date
+    selectedDateWeekDay() {
+      const calendarDate = new Date(this.selectedDate.year, this.selectedDate.month - 1, this.selectedDate.day);
+      return this.getWeekDay(calendarDate);
+    }
+
+    // when selecting a date, change to the date selected
+    onDateSelection(date: NgbDateStruct) {
+      this.selectedDate = date;
+    }
+
+    // get new date
+    getEachDate(date: NgbDateStruct) {
+      return new Date(date.year, date.month - 1, date.day + 1);
+      // return eachDate;
+    }
+
+    // Make the dates before today color dark such as gray
+    isDarked(date: NgbDateStruct) {
+      return this.getEachDate(date).getTime() < this.today.getTime();
+    }
+
+    // Disable the dates bofre today & the months that are NOT current month
+    isDisabled(date: NgbDateStruct, current: {month: number}) {
+      const eachDate = new Date(date.year, date.month - 1, date.day + 1);
+      const todayDate = new Date().getTime();
+      return eachDate.getTime() < todayDate || date.month !== current.month;
+    }
+
+    // for weekend
+    isWeekend(date: NgbDateStruct) {
+      const eachDate = new Date(date.year, date.month - 1, date.day);
+      return eachDate.getDay() === 0 || eachDate.getDay() === 6;
+    }
 
 }
